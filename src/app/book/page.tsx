@@ -1,17 +1,13 @@
-"use client";
-
-import { useMemo } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
-const BookPage = () => {
-  const searchParams = useSearchParams();
-  const serviceName = searchParams.get("service") || "Selected Service";
+type BookPageProps = {
+  searchParams: Promise<{ service?: string }>;
+};
 
-  const minDate = useMemo(() => {
-    const today = new Date();
-    return today.toISOString().split("T")[0];
-  }, []);
+const BookPage = async ({ searchParams }: BookPageProps) => {
+  const params = await searchParams;
+  const serviceName = params.service || "Selected Service";
+  const minDate = new Date().toISOString().split("T")[0];
 
   return (
     <main className="min-h-screen bg-slate-50 pt-36 pb-16">
@@ -25,7 +21,7 @@ const BookPage = () => {
           <h1 className="mt-2 text-3xl font-black text-slate-900">{serviceName}</h1>
           <p className="mt-2 text-sm text-slate-500">Fill your details and choose a convenient slot.</p>
 
-          <form className="mt-6 space-y-3" onSubmit={(event) => event.preventDefault()}>
+          <form className="mt-6 space-y-3">
             <input
               required
               name="name"
